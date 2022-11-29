@@ -1,0 +1,8 @@
+{ 
+    "name" : "thfrod/mvc-php",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+} 
