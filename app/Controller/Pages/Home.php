@@ -12,11 +12,9 @@ class Home extends Page
         $obOrganization = new Organization;
         // View da home
         $content =  View::render('pages/home', [
-            'name' => $obOrganization->name,
-            'description' => $obOrganization->description,
-            'site' => $obOrganization->site,
+            'name' => $obOrganization->name
         ]);
         // View da página
-        return parent::getPage('Thfrod', $content);
+        return parent::getPage('Home', $content);
     }
 }
