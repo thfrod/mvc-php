@@ -28,7 +28,7 @@ class Router
     // @param string $url
     public function __construct($url)
     {
-        $this->request = new Request();
+        $this->request = new Request($this);
         $this->url = $url;
         $this->setPrefix();
     }
@@ -139,10 +139,7 @@ class Router
                     $keys = $methods[$httpMethod]['variables'];
                     $methods[$httpMethod]['variables'] = array_combine($keys, $matches);
                     $methods[$httpMethod]['variables']['request'] = $this->request;
-                    // echo "<pre>";
-                    // print_r($methods);
-                    // echo "</pre>";
-                    // exit;
+                    
                     return $methods[$httpMethod];
                 }
                 throw new Exception('Método não permitido', 405);
@@ -157,9 +154,7 @@ class Router
     {
         try {
             $route = $this->getRoute();
-            // echo "<pre>";
-            // print_r($route);
-            // echo "</pre>";
+            
             // Verifica o controlador
             if (!isset($route['controller'])) {
                 throw new Exception('URL não pode ser processada, conta-te o administrador do sistema', 500);
@@ -181,5 +176,9 @@ class Router
         } catch (Exception $e) {
             return new Response($e->getCode(), $e->getMessage());
         }
+    }
+
+    public function getCurrentUrl(){
+        return $this->url.$this->getUri();
     }
 }

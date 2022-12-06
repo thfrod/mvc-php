@@ -4,6 +4,7 @@ namespace App\Controller\Pages;
 
 use \App\Utils\View;
 use \App\Model\Entity\Organization;
+
 // Responsável por retornar o conteúdo (view) da nossa página de sobre
 class About extends Page
 {
