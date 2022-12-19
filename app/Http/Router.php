@@ -5,6 +5,7 @@ namespace App\Http;
 use \Closure;
 use Exception;
 use ReflectionFunction;
+use \App\Http\Middleware\Queue as MiddlewareQueue;
 
 class Router
 {
@@ -55,6 +56,8 @@ class Router
                 continue;
             }
         }
+
+        $params['middlewares'] = $params['middlewares'] ?? [];
 
         // Variáveis da rota
         $params['variables'] = [];
@@ -139,7 +142,7 @@ class Router
                     $keys = $methods[$httpMethod]['variables'];
                     $methods[$httpMethod]['variables'] = array_combine($keys, $matches);
                     $methods[$httpMethod]['variables']['request'] = $this->request;
-                    
+
                     return $methods[$httpMethod];
                 }
                 throw new Exception('Método não permitido', 405);
@@ -154,7 +157,7 @@ class Router
     {
         try {
             $route = $this->getRoute();
-            
+
             // Verifica o controlador
             if (!isset($route['controller'])) {
                 throw new Exception('URL não pode ser processada, conta-te o administrador do sistema', 500);
@@ -169,16 +172,14 @@ class Router
                 $args[$name] = $route['variables'][$name] ?? '';
             };
            
-            // Retorna a execução da função
-            return call_user_func_array($route['controller'], $args);
-
-            exit;
+            return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
         } catch (Exception $e) {
             return new Response($e->getCode(), $e->getMessage());
         }
     }
 
-    public function getCurrentUrl(){
-        return $this->url.$this->getUri();
+    public function getCurrentUrl()
+    {
+        return $this->url . $this->getUri();
     }
 }

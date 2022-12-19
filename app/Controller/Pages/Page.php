@@ -29,8 +29,10 @@ class Page
             'footer' => self::getFooter(),
         ]);
     }
+
     public static function getPagination($request, $obPagination)
     {
+        
         $pages = $obPagination->getPages();
         if (count($pages) <= 1) return '';
         $links = '';
@@ -39,10 +41,7 @@ class Page
 
         $queryParams = $request->getQueryParams();
 
-        // echo '<pre>';
-        // print_r($url);
-        // echo '</pre>';
-        // exit;
+        
         foreach($pages as $page){
             $queryParams['page'] = $page['page'];
             $link = $url.'?'.http_build_query($queryParams);
@@ -55,10 +54,7 @@ class Page
             
 
         }
-        // echo '<pre>';
-        // print_r($link);
-        // echo '</pre>';
-        // exit;
+        
         return View::render('pages/pagination/box', [
             'links' => $links,
             
