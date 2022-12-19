@@ -6,5 +6,6 @@ use \App\Http\Router;
 $Router = new Router(URL);
 
 include __DIR__.'/routes/pages.php';
+include __DIR__.'/routes/admin.php';
 
 $Router->run()->sendResponse();
